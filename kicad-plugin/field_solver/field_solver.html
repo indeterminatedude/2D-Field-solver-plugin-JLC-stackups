@@ -6,20 +6,15 @@
 <title>2D Transmission Line Field Solver</title>
 <style>
 :root {
-  --bg: #070b10;
-  --panel: #111827;
-  --panel-alt: #1f2937;
-  --border: #374151;
-  --text: #f3f4f6;
-  --muted: #9ca3af;
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --conductor: #f59e0b;
-  --dielectric: #1e40af;
-  --air: #0f172a;
-  --ground: #6b7280;
+  --bg: #121417;
+  --panel: #181b20;
+  --border: #2c3138;
+  --text: #e6e8eb;
+  --muted: #8d939c;
+  --accent: #3b6fd8;
+  --success: #3cba8b;
+  --conductor: #e08a2c;
+  --ground: #8d939c;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 #solver-root {
@@ -27,12 +22,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: radial-gradient(ellipse at top, #1e293b 0%, var(--bg) 70%);
+  background: var(--bg);
   color: var(--text);
 }
 body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: radial-gradient(ellipse at top, #1e293b 0%, var(--bg) 70%);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
   color: var(--text);
   height: 100vh;
   display: flex;
@@ -40,16 +35,15 @@ body {
   overflow: hidden;
 }
 header {
-  background: rgba(17, 24, 39, 0.8);
-  backdrop-filter: blur(12px);
+  background: var(--panel);
   border-bottom: 1px solid var(--border);
-  padding: 0.85rem 1.75rem;
+  padding: 0.7rem 1.25rem;
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: baseline;
+  gap: 0.85rem;
 }
-header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
-header .subtitle { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
+header h1 { font-size: 1rem; font-weight: 600; }
+header .subtitle { color: var(--muted); font-size: 0.8rem; }
 .container {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -59,68 +53,80 @@ header .subtitle { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
   overflow: hidden;
 }
 .panel {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(8px);
+  background: var(--panel);
   border-right: 1px solid var(--border);
-  padding: 1.25rem;
+  padding: 1.1rem 1.25rem 1.4rem;
   overflow-y: auto;
 }
 .panel h2 {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.78rem;
   color: var(--muted);
-  margin-bottom: 1.1rem;
-  padding-bottom: 0.6rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
 label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--muted);
-  margin-bottom: 0.3rem;
-  margin-top: 0.85rem;
+  margin-bottom: 0.28rem;
+  margin-top: 0.75rem;
   font-weight: 500;
 }
 input, select {
   width: 100%;
-  background: #0f172a;
-  border: 1px solid #374151;
+  background: #121417;
+  border: 1px solid var(--border);
   color: var(--text);
-  padding: 0.55rem 0.8rem;
-  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 4px;
   font-size: 0.9rem;
-  transition: border-color 0.15s, box-shadow 0.15s;
 }
 input:focus, select:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+.checks { margin-top: 0.15rem; }
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  color: var(--text);
+  font-weight: 450;
 }
 .row { display: flex; gap: 0.6rem; }
-.row > * { flex: 1; }
+.row > * { flex: 1; min-width: 0; }
 button {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: var(--accent);
   color: white;
   border: none;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.88rem;
   width: 100%;
-  margin-top: 0.9rem;
-  transition: all 0.15s;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  margin-top: 0.7rem;
 }
-button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
+button:hover { filter: brightness(1.08); }
 button.secondary {
   background: transparent;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--border);
   color: var(--text);
-  box-shadow: none;
 }
-button.secondary:hover { background: #1f2937; }
+button.secondary:hover { background: #22262c; }
 .side {
   display: flex;
   flex-direction: column;
@@ -145,13 +151,13 @@ button.secondary:hover { background: #1f2937; }
   background: #f1f5f9;
 }
 .canvas-controls {
-  padding: 0.35rem 0.8rem;
-  background: rgba(17, 24, 39, 0.92);
+  padding: 0.4rem 0.8rem;
+  background: var(--panel);
   border-top: 1px solid var(--border);
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: var(--muted);
   flex: 0 0 auto;
 }
@@ -161,22 +167,34 @@ button.secondary:hover { background: #1f2937; }
   border-right: none;
   overflow-y: auto;
 }
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.6rem;
+.result-grid { display: none; }
+.metrics {
+  display: flex;
+  flex-direction: column;
 }
-.result-card {
-  background: linear-gradient(145deg, #1f2937, #111827);
-  border: 1px solid #374151;
-  border-radius: 12px;
-  padding: 0.9rem 1rem;
-  margin-bottom: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.62rem 0;
+  border-bottom: 1px solid var(--border);
 }
-.result-card .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-.result-card .value { font-size: 1.55rem; font-weight: 700; color: var(--success); letter-spacing: -0.02em; }
-.result-card .unit { font-size: 0.75rem; color: var(--muted); margin-left: 0.3rem; }
+.metric .label {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.metric .num {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.metric .num b { color: var(--success); font-weight: 600; }
 .progress {
   height: 6px;
   background: #1e293b;
@@ -199,13 +217,19 @@ button.secondary:hover { background: #1f2937; }
 }
 .legend {
   display: flex;
-  gap: 1.2rem;
-  font-size: 0.72rem;
-  margin-top: 0.6rem;
-  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.8rem;
+  margin-top: 0.85rem;
+  color: var(--muted);
 }
 .legend span { display: flex; align-items: center; gap: 0.4rem; }
-.swatch { width: 14px; height: 14px; border-radius: 3px; }
+.swatch { width: 10px; height: 10px; }
+.note {
+  margin-top: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
 .hidden { display: none; }
 a.plugin-link {
   margin-left: auto;
@@ -253,8 +277,8 @@ a.plugin-link:hover { background: #1f2937; }
       <option value="4l_1080_inner">4L 1.6mm · JLC04161H-1080 · Inner Stripline (B≈1.265mm, Er=4.6)</option>
       <option value="6l_outer_typical">6L 1.6mm · Typical Outer Microstrip (H≈0.1mm, Er≈4.1)</option>
     </select>
-    <div style="font-size:0.72rem;color:var(--muted);margin-top:0.25rem;margin-bottom:0.5rem" id="stackupNote">
-      Values based on JLCPCB impedance control stackups (1oz outer / 0.5oz inner finished copper).
+    <div style="font-size:0.8rem;color:var(--muted);margin-top:0.35rem;line-height:1.4" id="stackupNote">
+      JLCPCB published finished copper and post-lamination dielectric.
     </div>
 
     <label>Units</label>
@@ -301,25 +325,17 @@ a.plugin-link:hover { background: #1f2937; }
     <label>Frequency (GHz)</label>
     <input type="number" id="freq" value="1" step="0.1" min="0">
 
-    <h2 style="margin-top:1.5rem">Ground References</h2>
-    <label style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem">
-      <input type="checkbox" id="gndBottom" checked> Bottom plane as GND
-    </label>
-    <label style="display:flex;align-items:center;gap:0.5rem">
-      <input type="checkbox" id="gndTop"> Top plane as GND
-    </label>
-    <label style="display:flex;align-items:center;gap:0.5rem">
-      <input type="checkbox" id="gndSides"> Side coplanar GND
-    </label>
+    <h2 style="margin-top:1.35rem">Ground</h2>
+    <div class="checks">
+      <label class="check"><input type="checkbox" id="gndBottom" checked><span>Bottom plane</span></label>
+      <label class="check"><input type="checkbox" id="gndTop"><span>Top plane</span></label>
+      <label class="check"><input type="checkbox" id="gndSides"><span>Coplanar sides</span></label>
+    </div>
 
-    <button id="calcBtn">Calculate (Analytical)</button>
-    <button id="solveBtn" class="secondary">Solve Fields (Numerical)</button>
+    <button id="calcBtn">Calculate</button>
+    <button id="solveBtn" class="secondary">Solve fields</button>
     <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
     <div class="status" id="status">Ready</div>
-    <p id="kicadNote" style="margin-top:0.85rem;font-size:0.72rem;color:var(--muted);line-height:1.45">
-      KiCad: unzip the plugin into the scripting/plugins folder (8.0 or 9.0), then Tools → External Plugins → 2D Field Solver.
-      A selected track’s width is loaded as W. window.FieldSolver.getResult() returns the last solve.
-    </p>
   </div>
 
   <div class="side">
@@ -333,27 +349,26 @@ a.plugin-link:hover { background: #1f2937; }
 
     <div class="panel results">
       <h2>Results</h2>
-      <div class="result-grid">
-        <div class="result-card">
-          <div class="label">Characteristic Impedance</div>
-          <div><span class="value" id="z0">—</span><span class="unit">Ω</span></div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="label">Impedance</div>
+          <div class="num"><b id="z0">—</b> Ω</div>
         </div>
-        <div class="result-card">
+        <div class="metric">
           <div class="label">Effective ε<sub>r</sub></div>
-          <div><span class="value" id="eeff">—</span></div>
+          <div class="num"><b id="eeff">—</b></div>
         </div>
-        <div class="result-card" id="diffCard" style="display:none">
-          <div class="label">Z<sub>odd</sub> / Z<sub>even</sub></div>
-          <div><span class="value" id="zodd">—</span> / <span class="value" id="zeven">—</span><span class="unit">Ω</span></div>
-          <div style="margin-top:0.25rem"><span class="label">Z<sub>diff</sub> ≈ </span><span class="value" id="zdiff">—</span><span class="unit">Ω</span></div>
+        <div class="metric" id="diffCard" style="display:none">
+          <div class="label">Z<sub>odd</sub> / Z<sub>even</sub> / Z<sub>diff</sub></div>
+          <div class="num"><b id="zodd">—</b> / <b id="zeven">—</b> / <b id="zdiff">—</b> Ω</div>
         </div>
-        <div class="result-card">
-          <div class="label">Wavelength @ freq</div>
-          <div><span class="value" id="lambda">—</span><span class="unit">mm</span></div>
+        <div class="metric">
+          <div class="label">Wavelength</div>
+          <div class="num"><b id="lambda">—</b> mm</div>
         </div>
-        <div class="result-card">
-          <div class="label">Propagation Delay</div>
-          <div><span class="value" id="delay">—</span><span class="unit">ps/mm</span></div>
+        <div class="metric">
+          <div class="label">Delay</div>
+          <div class="num"><b id="delay">—</b> ps/mm</div>
         </div>
       </div>
       <div class="legend">
@@ -361,10 +376,8 @@ a.plugin-link:hover { background: #1f2937; }
         <span><div class="swatch" style="background:#22c55e"></div> Dielectric</span>
         <span><div class="swatch" style="background:#f59e0b"></div> Ground</span>
       </div>
-      <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">
-        Analytical uses Hammerstad-Jensen / IPC-2141 style formulas.
-        Numerical solves Laplace ∇·(ε∇φ)=0 via SOR.
-        JLCPCB presets use published finished copper and post-lamination dielectric thicknesses.
+      <div class="note">
+        Closed-form Hammerstad–Jensen and IPC-2141. Field plot is a Laplace solution, not a second impedance.
       </div>
     </div>
   </div>
@@ -538,7 +551,7 @@ function calculateAnalytical() {
   const c = 299792458; // m/s
   const v = c / Math.sqrt(res.eeff);
   const lambda_mm = (v / (p.freq * 1e9)) * 1000;
-  const delay_ps_mm = 1000 / (v / 1e12);
+  const delay_ps_mm = 1e9 / v;
   document.getElementById('lambda').textContent = lambda_mm.toFixed(1);
   document.getElementById('delay').textContent = delay_ps_mm.toFixed(2);
   document.getElementById('status').textContent = 'Analytical calculation complete';
