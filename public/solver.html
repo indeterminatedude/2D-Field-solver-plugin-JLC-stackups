@@ -333,6 +333,7 @@ a.plugin-link:hover { background: #1f2937; }
     </div>
 
     <button id="calcBtn">Calculate</button>
+    <button id="width50Btn" class="secondary">Width for 50 Ω</button>
     <button id="solveBtn" class="secondary">Solve fields</button>
     <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
     <div class="status" id="status">Ready</div>
@@ -558,7 +559,47 @@ function calculateAnalytical() {
   drawGeometry();
 }
 
+function impedanceAt(p, wMm) {
+  if (p.structure === 'embedded') return embedded(wMm, p.h, p.h2, p.t, p.er).z0;
+  if (p.structure === 'edge-coupled') return edgeCoupled(wMm, p.h, p.s, p.t, p.er).z0;
+  if (p.structure === 'stripline') return stripline(wMm, p.b, p.t, p.er).z0;
+  if (p.structure === 'cpw') return cpw(wMm, p.s, p.h, p.t, p.er).z0;
+  return microstrip(wMm, p.h, p.t, p.er).z0;
+}
+
+function widthFor50() {
+  const p = getInputs();
+  const target = 50;
+  let lo = 0.02;
+  let hi = Math.max((p.b || p.h || 0.2) * 30, 5);
+  let zLo = impedanceAt(p, lo);
+  let zHi = impedanceAt(p, hi);
+  if (zLo < target) {
+    document.getElementById('status').textContent = '50 Ω needs a narrower trace than 0.02 mm with this stackup.';
+    return;
+  }
+  for (let n = 0; n < 8 && zHi > target; n++) {
+    hi *= 2;
+    zHi = impedanceAt(p, hi);
+  }
+  if (zHi > target) {
+    document.getElementById('status').textContent = '50 Ω needs a wider trace than this stackup can reach.';
+    return;
+  }
+  for (let i = 0; i < 48; i++) {
+    const mid = (lo + hi) / 2;
+    if (impedanceAt(p, mid) > target) lo = mid;
+    else hi = mid;
+  }
+  const wMm = (lo + hi) / 2;
+  const shown = p.units === 'mil' ? wMm / 0.0254 : wMm;
+  document.getElementById('w').value = shown.toFixed(p.units === 'mil' ? 2 : 3);
+  calculateAnalytical();
+  document.getElementById('status').textContent = 'Width set for 50 Ω single-ended.';
+}
+
 document.getElementById('calcBtn').addEventListener('click', calculateAnalytical);
+document.getElementById('width50Btn').addEventListener('click', widthFor50);
 
 // --- Numerical 2D FDM Solver ---
 async function solveFields() {
