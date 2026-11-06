@@ -1,0 +1,1 @@
+import{t as e}from"./index-Wo9rDk8-.js";var t=e();function n(){return(0,t.jsx)(`iframe`,{title:`2D Field Solver`,src:`/solver.html`,className:`block h-dvh w-full border-0`})}export{n as component};
