@@ -3,9 +3,11 @@
 Install: copy this folder into KiCad's scripting plugins directory, then
 Tools -> External Plugins -> Refresh Plugins.
 
-  Linux:   ~/.local/share/kicad/<8.0|9.0>/scripting/plugins/field_solver
-  macOS:   ~/Library/Preferences/kicad/<8.0|9.0>/scripting/plugins/field_solver
-  Windows: %APPDATA%\\kicad\\<8.0|9.0>\\scripting\\plugins\\field_solver
+  KiCad 10 (macOS): ~/Documents/KiCad/10.0/scripting/plugins/field_solver
+  KiCad 9:  ~/Documents/KiCad/9.0/scripting/plugins/field_solver
+  KiCad 8:   ~/.local/share/kicad/8.0/scripting/plugins/field_solver   (Linux)
+             ~/Library/Preferences/kicad/8.0/scripting/plugins/field_solver
+             %APPDATA%\\kicad\\8.0\\scripting\\plugins\\field_solver
 
 If a track is selected, its width is passed in as W (mm).
 """
@@ -59,14 +61,22 @@ class FieldSolverPlugin(pcbnew.ActionPlugin):
     def Run(self):
         url = _file_url()
         try:
-            import wx
-            import wx.html2
+            self._show_dialog(url)
         except Exception:
             webbrowser.open(url)
-            return
 
-        app = wx.GetApp()
-        parent = app.GetTopWindow() if app else None
+    def _show_dialog(self, url):
+        import wx
+        import wx.html2
+
+        # KiCad 10's wx app is an AppConsole and has no GetTopWindow.
+        parent = None
+        getter = getattr(wx, "GetTopLevelWindows", None)
+        if getter:
+            windows = getter()
+            if windows:
+                parent = windows[0]
+
         dialog = wx.Dialog(
             parent,
             title="2D Field Solver",
