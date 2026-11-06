@@ -1,0 +1,30 @@
+{
+  "$schema": "https://go.kicad.org/pcm/schemas/v2",
+  "identifier": "com.github.indeterminatedude.field-solver",
+  "name": "2D Field Solver",
+  "description": "Microstrip, embedded microstrip, edge-coupled, stripline, and CPW impedance with JLCPCB stackups.",
+  "description_full": "Transmission-line calculator for PCB layout. Supports microstrip, embedded microstrip, edge-coupled microstrip, stripline, and conductor-backed coplanar waveguide. JLCPCB stackup presets fill dielectric constant, height, and finished copper. Opens in its own window from the PCB editor toolbar. A selected track width is loaded as W.",
+  "type": "plugin",
+  "author": {
+    "name": "Siddhant Rao",
+    "contact": {
+      "web": "https://github.com/indeterminatedude"
+    }
+  },
+  "license": "GPL-3.0",
+  "resources": {
+    "homepage": "https://github.com/indeterminatedude/2D-Field-solver-plugin-JLC-stackups"
+  },
+  "versions": [
+    {
+      "version": "1.0.0",
+      "status": "stable",
+      "kicad_version": "8.0",
+      "runtime": "swig",
+      "download_url": "https://github.com/indeterminatedude/2D-Field-solver-plugin-JLC-stackups/releases/download/v1.0.0/field-solver-1.0.0.zip",
+      "download_sha256": "59892ac9c839618dcb6121154cbb6a76eee511a79607fdaf56fc22a87fb5c548",
+      "download_size": 23676,
+      "install_size": 71049
+    }
+  ]
+}
